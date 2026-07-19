@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 import os
 
-TOKEN = os.getenv"8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"
+TOKEN= "8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"
 
 responses = {
     "واه": "متلعبهاش وهراني يا واحد القسنطيني",
