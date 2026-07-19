@@ -27,6 +27,7 @@ import random
 from telegram import Update
 from telegram.ext import Application, MessageHandler, ContextTypes, filters
 
+TOKEN = 8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E
 replies = {
     "برب": "شلقماتك برب؟",
     "لا": "لا",
