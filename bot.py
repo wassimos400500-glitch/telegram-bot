@@ -64,7 +64,8 @@ app = Application.builder().token(TOKEN).build()
 
 app.add_handler(MessageHandler(filters.TEXT, message_handler))
 
-app.run_polling()flags = [
+app.run_polling()
+flags = [
     "🇯🇵 اليابان",
     "🇧🇷 البرازيل",
     "🇫🇮 فنلندا",
@@ -106,3 +107,4 @@ countries = [
     "أوسلو 🇳🇴",
     "كوالالمبور 🇲🇾"
 ]
+app.run_polling()
