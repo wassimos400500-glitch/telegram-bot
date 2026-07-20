@@ -47,8 +47,42 @@ verses = [
     "﴿وَاللَّهُ خَيْرُ الرَّازِقِينَ﴾"
 ]
 
-async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = update.message.text.lower()
+flags = {
+    "🇩🇿": "الجزائر",
+    "🇲🇦": "المغرب",
+    "🇯🇵": "اليابان",
+    "🇧🇷": "البرازيل",
+    "🇫🇷": "فرنسا",
+    "🇹🇷": "تركيا",
+    "🇪🇬": "مصر",
+    "🇨🇦": "كندا",
+    "🇰🇷": "كوريا الجنوبية",
+    "🇮🇹": "إيطاليا",
+    "🇩🇪": "ألمانيا",
+    "🇪🇸": "إسبانيا",
+    "🇬🇧": "المملكة المتحدة",
+    "🇺🇸": "الولايات المتحدة",
+    "🇸🇦": "السعودية"
+}
+
+capitals = {
+    "الجزائر": "الجزائر",
+    "المغرب": "الرباط",
+    "اليابان": "طوكيو",
+    "البرازيل": "برازيليا",
+    "فرنسا": "باريس",
+    "تركيا": "أنقرة",
+    "مصر": "القاهرة",
+    "كندا": "أوتاوا",
+    "كوريا الجنوبية": "سيول",
+    "إيطاليا": "روما",
+    "ألمانيا": "برلين",
+    "إسبانيا": "مدريد",
+    "المملكة المتحدة": "لندن",
+    "الولايات المتحدة": "واشنطن",
+    "السعودية": "الرياض"
+}async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text.strip()
 
     if text in replies:
         await update.message.reply_text(replies[text])
@@ -56,56 +90,21 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif text == "اية":
         await update.message.reply_text(random.choice(verses))
 
-    else:
-        await update.message.reply_text("لم أفهم رسالتك")
+    elif text == "اعلام":
+        flag = random.choice(list(flags.keys()))
+        context.user_data["flag_answer"] = flags[flag]
+        await update.message.reply_text(flag)
 
+    elif "flag_answer" in context.user_data:
+        answer = context.user_data["flag_answer"]
+        if text == answer:
+            await update.message.reply_text("برافو ✅")
+        else:
+            await update.message.reply_text(f"خطأ ❌ الإجابة هي {answer}")
+        del context.user_data["flag_answer"]
 
-app = Application.builder().token(TOKEN).build()
-
-app.add_handler(MessageHandler(filters.TEXT, message_handler))
-
-app.run_polling()
-
-flags = [
-    "🇯🇵 اليابان",
-    "🇧🇷 البرازيل",
-    "🇫🇮 فنلندا",
-    "🇵🇹 البرتغال",
-    "🇰🇷 كوريا الجنوبية",
-    "🇳🇴 النرويج",
-    "🇮🇸 آيسلندا",
-    "🇲🇾 ماليزيا",
-    "🇻🇳 فيتنام",
-    "🇷🇴 رومانيا",
-    "🇲🇦 المغرب",
-    "🇩🇿 الجزائر",
-    "🇹🇷 تركيا",
-    "🇨🇦 كندا"
-]
-
-capitals = [
-    "ما عاصمة اليابان؟",
-    "ما عاصمة البرازيل؟",
-    "ما عاصمة البرتغال؟",
-    "ما عاصمة تركيا؟",
-    "ما عاصمة كندا؟",
-    "ما عاصمة المغرب؟",
-    "ما عاصمة الجزائر؟",
-    "ما عاصمة كوريا الجنوبية؟",
-    "ما عاصمة النرويج؟",
-    "ما عاصمة ماليزيا؟"
-]
-
-countries = [
-    "طوكيو 🇯🇵",
-    "برازيليا 🇧🇷",
-    "لشبونة 🇵🇹",
-    "أنقرة 🇹🇷",
-    "أوتاوا 🇨🇦",
-    "الرباط 🇲🇦",
-    "الجزائر 🇩🇿",
-    "سيول 🇰🇷",
-    "أوسلو 🇳🇴",
-    "كوالالمبور 🇲🇾"
-]
+    elif text == "عواصم":
+        country = random.choice(list(capitals.keys()))
+        context.user_data["capital_answer"] = capitals[country]
+        await update.message.reply_text(f"ما ع
 app.run_polling()
