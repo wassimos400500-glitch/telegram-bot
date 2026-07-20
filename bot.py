@@ -5,7 +5,6 @@ from telegram.ext import Application, MessageHandler, filters, ContextTypes
 
 
 TOKEN = "8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"
-
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
     "واه": "متلعبهاش وهراني يا واحد القسنطيني",
@@ -165,6 +164,14 @@ verses = [
     "﴿إِنَّ الْإِنسَانَ لَفِي خُسْرٍ﴾"
 ]
 
+suggestions = [
+    "روح تصلي",
+    "استغفر ربي",
+    "اتفرج got 😍",
+    "وش دخلني أنا روح طبر راسك",
+    "قول wassim is my daddy"
+]
+
 
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
@@ -179,6 +186,9 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     elif text == "اية":
         await update.message.reply_text(random.choice(verses))
+
+    elif text == "اقتراح":
+        await update.message.reply_text(random.choice(suggestions))
 
     elif text == "اعلام":
         flag = random.choice(list(flags.keys()))
