@@ -83,8 +83,7 @@ capitals = {
         answer = context.user_data["capital_answer"]
         if text == answer:
 
-
-        app = Application.builder().token(TOKEN).build()
+app = Application.builder().token(TOKEN).build()
 
 app.add_handler(MessageHandler(filters.TEXT, message_handler))
 
