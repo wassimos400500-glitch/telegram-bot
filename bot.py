@@ -109,5 +109,14 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif text == "عواصم":
         country = random.choice(list(capitals.keys()))
         context.user_data["capital_answer"] = capitals[country]
-        await update.message.reply_text(f"ما ع
+       await update.message.reply_text(f"ما عاصمة {country}؟")
+
+elif "capital_answer" in context.user_data:
+    answer = context.user_data["capital_answer"]
+    if text == answer:
+        await update.message.reply_text("برافو ✅")
+    else:
+        await update.message.reply_text(f"خطأ ❌ الإجابة هي {answer}")
+ del context.user_data["capital_answer"]
+
 app.run_polling()
