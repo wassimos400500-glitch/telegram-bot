@@ -64,6 +64,8 @@ app = Application.builder().token(TOKEN).build()
 
 app.add_handler(MessageHandler(filters.TEXT, message_handler))
 
+app.run_polling()
+
 flags = [
     "🇯🇵 اليابان",
     "🇧🇷 البرازيل",
@@ -80,7 +82,7 @@ flags = [
     "🇹🇷 تركيا",
     "🇨🇦 كندا"
 ]
-app.run_polling()
+
 capitals = [
     "ما عاصمة اليابان؟",
     "ما عاصمة البرازيل؟",
