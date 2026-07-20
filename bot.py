@@ -1,7 +1,11 @@
+import os
+import random
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
-import random
-TOKEN = "8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"
+
+# التوكن جاي من Environment Variable اللي حاططها في Render
+TOKEN = os.environ["BOT_TOKEN"]
+
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
     "واه": "متلعبهاش وهراني يا واحد القسنطيني",
@@ -18,6 +22,7 @@ responses = {
     "ماتش؟": "علاه روح صلي",
     "معز": "نيوزر"
 }
+
 flags = {
     "🇩🇿": "الجزائر",
     "🇲🇦": "المغرب",
@@ -35,12 +40,14 @@ flags = {
     "🇺🇸": "الولايات المتحدة",
     "🇸🇦": "السعودية"
 }
+
 verses = [
-    "﴿إِنَّ مَعَ الْعُسْرِ يُسْرًا﴾",
-    "﴿وَقُل رَّبِّ زِدْنِي عِلْمًا﴾",
-    "﴿إِنَّ اللَّهَ مَعَ الصَّابِرِينَ﴾",
-    "﴿وَاللَّهُ خَيْرُ الرَّازِقِينَ﴾"
+    "﴿إِنَّ مَعَ الْعُسْرِ يُسْرًا﴾",
+    "﴿وَقُل رَّبِّ زِدْنِي عِلْمًا﴾",
+    "﴿إِنَّ اللَّهَ مَعَ الصَّابِرِينَ﴾",
+    "﴿وَاللَّهُ خَيْرُ الرَّازِقِينَ﴾"
 ]
+
 capitals = {
     "الجزائر": "الجزائر",
     "المغرب": "الرباط",
@@ -49,10 +56,12 @@ capitals = {
     "فرنسا": "باريس",
     "تركيا": "أنقرة",
     "مصر": "القاهرة",
-    "كندا": "أوتاوا", 
+    "كندا": "أوتاوا",
     "كوريا الجنوبية": "سيول"
 }
-    async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+
+async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
 
     if text in responses:
@@ -81,16 +90,16 @@ capitals = {
 
     elif "capital_answer" in context.user_data:
         answer = context.user_data["capital_answer"]
-    if text == answer:
         if text == answer:
             await update.message.reply_text("برافو ✅")
         else:
             await update.message.reply_text(f"خطأ ❌ الإجابة هي {answer}")
         del context.user_data["capital_answer"]
-        
+
+
 app = Application.builder().token(TOKEN).build()
 
-app.add_handler(MessageHandler(filters.TEXT, message_handler))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
 
 print("Bot started...")
 
