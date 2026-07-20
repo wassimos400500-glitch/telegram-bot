@@ -81,8 +81,13 @@ capitals = {
 
     elif "capital_answer" in context.user_data:
         answer = context.user_data["capital_answer"]
+    if text == answer:
         if text == answer:
-
+            await update.message.reply_text("برافو ✅")
+        else:
+            await update.message.reply_text(f"خطأ ❌ الإجابة هي {answer}")
+        del context.user_data["capital_answer"]
+        
 app = Application.builder().token(TOKEN).build()
 
 app.add_handler(MessageHandler(filters.TEXT, message_handler))
