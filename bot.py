@@ -50,7 +50,7 @@ capitals = {
     "تركيا": "أنقرة",
     "مصر": "القاهرة",
     "كندا": "أوتاوا",
-    "كوريا الجنوبية": "سيول
+    "كوريا الجنوبية": "سيول"
     async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
 
