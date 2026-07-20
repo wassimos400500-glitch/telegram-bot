@@ -81,7 +81,10 @@ capitals = {
     "المملكة المتحدة": "لندن",
     "الولايات المتحدة": "واشنطن",
     "السعودية": "الرياض"
-}async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+}
+
+
+async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
 
     if text in replies:
