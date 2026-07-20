@@ -3,8 +3,7 @@ import random
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 
-# التوكن جاي من Environment Variable اللي حاططها في Render
-TOKEN = os.environ["BOT_TOKEN"]
+TOKEN = "8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"
 
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
