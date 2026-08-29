@@ -200,17 +200,20 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         del context.user_data["capital_answer"]
 
     else:
-        # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ ChatGPT
+        # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ Claude
         try:
-            response = client.responses.create(
-                model="gpt-5.6-luna",
-                instructions="انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة.",
-                input=text
+            message = client.messages.create(
+                model="claude-sonnet-5",
+                max_tokens=500,
+                system="انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة.",
+                messages=[
+                    {"role": "user", "content": text}
+                ]
             )
-            reply = response.output_text
+            reply = message.content[0].text
             await update.message.reply_text(reply)
         except Exception as e:
-            print("OPENAI ERROR:", repr(e))
+            print("CLAUDE ERROR:", repr(e))
             await update.message.reply_text(f"خطأ: {e}")
 
 
@@ -223,3 +226,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
