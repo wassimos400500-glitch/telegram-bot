@@ -201,6 +201,7 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     else:
         # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ Claude
+        print("جاري الاتصال بـ Claude...")
         try:
             message = client.messages.create(
                 model="claude-sonnet-5",
