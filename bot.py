@@ -4,11 +4,11 @@ from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 from openai import OpenAI
 
-
+# التوكن مكتوب مباشرة هنا
 TOKEN = "8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"
 
-
-OPENAI_API_KEY = "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"
+# ضع مفتاح API بتاع ChatGPT هنا بدل الكلام ده
+OPENAI_API_KEY = "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"
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -202,14 +202,12 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ ChatGPT
         try:
-            completion = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": "انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة."},
-                    {"role": "user", "content": text}
-                ]
+            response = client.responses.create(
+                model="gpt-5.6-luna",
+                instructions="انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة.",
+                input=text
             )
-            reply = completion.choices[0].message.content
+            reply = response.output_text
             await update.message.reply_text(reply)
         except Exception as e:
             await update.message.reply_text("صار خطأ في الاتصال بـ ChatGPT، جرب بعدين.")
@@ -225,4 +223,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-    
