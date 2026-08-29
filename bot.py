@@ -1,3 +1,4 @@
+
 import os
 import random
 from telegram import Update
@@ -210,7 +211,8 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply = response.output_text
             await update.message.reply_text(reply)
         except Exception as e:
-            await update.message.reply_text("صار خطأ في الاتصال بـ ChatGPT، جرب بعدين.")
+            print("OPENAI ERROR:", repr(e))
+            await update.message.reply_text(f"خطأ: {e}")
 
 
 def main():
@@ -222,4 +224,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
