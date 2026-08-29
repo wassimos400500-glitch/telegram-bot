@@ -1,17 +1,16 @@
-
 import os
 import random
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
-from openai import OpenAI
+from anthropic import Anthropic
 
 # التوكن مكتوب مباشرة هنا
 TOKEN = "8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"
 
-# ضع مفتاح API بتاع ChatGPT هنا بدل الكلام ده
-OPENAI_API_KEY = "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"
+# ضع مفتاح API بتاع Claude (Anthropic) هنا بدل الكلام ده
+ANTHROPIC_API_KEY = "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"
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = Anthropic(api_key=ANTHROPIC_API_KEY)
 
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
