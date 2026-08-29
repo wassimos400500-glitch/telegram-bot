@@ -2,9 +2,15 @@ import os
 import random
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
+from openai import OpenAI
 
 
 TOKEN = "8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"
+
+
+OPENAI_API_KEY = "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"
+
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
@@ -193,6 +199,21 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(f"خطأ ❌ الإجابة هي {answer}")
         del context.user_data["capital_answer"]
 
+    else:
+        # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ ChatGPT
+        try:
+            completion = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة."},
+                    {"role": "user", "content": text}
+                ]
+            )
+            reply = completion.choices[0].message.content
+            await update.message.reply_text(reply)
+        except Exception as e:
+            await update.message.reply_text("صار خطأ في الاتصال بـ ChatGPT، جرب بعدين.")
+
 
 def main():
     app = Application.builder().token(TOKEN).build()
@@ -203,3 +224,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    
