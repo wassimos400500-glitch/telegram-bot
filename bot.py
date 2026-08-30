@@ -5,7 +5,7 @@ from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 
 # التوكن الجديد بعد الإلغاء
-TOKEN = "8766911595:AAEv-XzQis_VqPndJWVxE1__5NmYf-nY5WM"
+TOKEN = "8766911595:AAEBr3WoIVw-v5x3NFLsEmU3InZPVXtB9Qk"
 
 # مفتاح Gemini API (مجاني)
 GEMINI_API_KEY = "AQ.Ab8RN6KEhetFQ9zOvt3sZ19YAxlxf57Tgiuxu4xk6ZwSU2_YnQ"
