@@ -2,15 +2,19 @@ import os
 import random
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
-from openai import OpenAI
+import google.generativeai as genai
 
 # التوكن الجديد بعد الإلغاء
 TOKEN = "8766911595:AAEv-XzQis_VqPndJWVxE1__5NmYf-nY5WM"
 
-# مفتاح ChatGPT API
-OPENAI_API_KEY = "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"
+# مفتاح Gemini API (مجاني)
+GEMINI_API_KEY = "AQ.Ab8RN6I5jZgHG4XYO7DYfi_NJ_F7puce_0ZF0Op6tNMfK_BWGA"
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+genai.configure(api_key=GEMINI_API_KEY)
+gemini_model = genai.GenerativeModel(
+    "gemini-2.0-flash",
+    system_instruction="انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة."
+)
 
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
@@ -200,19 +204,13 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         del context.user_data["capital_answer"]
 
     else:
-        # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ ChatGPT
+        # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ Gemini
         try:
-            completion = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": "انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة."},
-                    {"role": "user", "content": text}
-                ]
-            )
-            reply = completion.choices[0].message.content
+            response = gemini_model.generate_content(text)
+            reply = response.text
             await update.message.reply_text(reply)
         except Exception as e:
-            print("OPENAI ERROR:", repr(e))
+            print("GEMINI ERROR:", repr(e))
             await update.message.reply_text(f"خطأ: {e}")
 
 
@@ -225,4 +223,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
