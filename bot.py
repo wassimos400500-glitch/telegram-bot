@@ -1,34 +1,28 @@
+
 import os
 import random
-import requests
+from groq import Groq
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 
 # التوكن الجديد بعد الإلغاء
 TOKEN = "8766911595:AAEBr3WoIVw-v5x3NFLsEmU3InZPVXtB9Qk"
 
-# مفتاح Gemini API (مجاني)
-GEMINI_API_KEY = "AQ.Ab8RN6KEhetFQ9zOvt3sZ19YAxlxf57Tgiuxu4xk6ZwSU2_YnQ"
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
+# مفتاح Groq API (مجاني)
+GROQ_API_KEY = "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"
+
+groq_client = Groq(api_key=GROQ_API_KEY)
 
 
-def ask_gemini(user_text: str) -> str:
-    headers = {
-        "Content-Type": "application/json",
-        "X-goog-api-key": GEMINI_API_KEY,
-    }
-    payload = {
-        "system_instruction": {
-            "parts": [{"text": "انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة."}]
-        },
-        "contents": [
-            {"parts": [{"text": user_text}]}
+def ask_groq(user_text: str) -> str:
+    completion = groq_client.chat.completions.create(
+        model="openai/gpt-oss-20b",
+        messages=[
+            {"role": "system", "content": "انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة."},
+            {"role": "user", "content": user_text}
         ]
-    }
-    r = requests.post(GEMINI_URL, headers=headers, json=payload, timeout=30)
-    r.raise_for_status()
-    data = r.json()
-    return data["candidates"][0]["content"]["parts"][0]["text"]
+    )
+    return completion.choices[0].message.content
 
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
@@ -217,16 +211,15 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(f"خطأ ❌ الإجابة هي {answer}")
         del context.user_data["capital_answer"]
 
-    else:
-        # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ Gemini
+    elif text.startswith("وسيم") and len(text.strip()) > len("وسيم"):
+        # لازم يكتب "وسيم" ثم سؤاله عشان يوصل لـ Groq
+        question = text[len("وسيم"):].strip()
         try:
-            reply = ask_gemini(text)
+            reply = ask_groq(question)
             await update.message.reply_text(reply)
         except Exception as e:
-            print("GEMINI ERROR:", repr(e))
+            print("GROQ ERROR:", repr(e))
             await update.message.reply_text(f"خطأ: {e}")
-
-
 def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
