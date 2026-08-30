@@ -2,15 +2,15 @@ import os
 import random
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
-from anthropic import Anthropic
+from openai import OpenAI
 
 # التوكن الجديد بعد الإلغاء
 TOKEN = "8766911595:AAEv-XzQis_VqPndJWVxE1__5NmYf-nY5WM"
 
-# مفتاح Claude API
-ANTHROPIC_API_KEY = "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"
+# مفتاح ChatGPT API
+OPENAI_API_KEY = "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"
 
-client = Anthropic(api_key=ANTHROPIC_API_KEY)
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
@@ -200,20 +200,19 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         del context.user_data["capital_answer"]
 
     else:
-        # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ Claude
+        # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ ChatGPT
         try:
-            message = client.messages.create(
-                model="claude-sonnet-5",
-                max_tokens=500,
-                system="انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة.",
+            completion = client.chat.completions.create(
+                model="gpt-4o-mini",
                 messages=[
+                    {"role": "system", "content": "انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة."},
                     {"role": "user", "content": text}
                 ]
             )
-            reply = message.content[0].text
+            reply = completion.choices[0].message.content
             await update.message.reply_text(reply)
         except Exception as e:
-            print("CLAUDE ERROR:", repr(e))
+            print("OPENAI ERROR:", repr(e))
             await update.message.reply_text(f"خطأ: {e}")
 
 
