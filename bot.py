@@ -2,37 +2,31 @@ import os
 import random
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
-from anthropic import Anthropic
 
-# التوكن مكتوب مباشرة هنا
-TOKEN = "8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"
-
-# ضع مفتاح API بتاع Claude (Anthropic) هنا بدل الكلام ده
-ANTHROPIC_API_KEY = "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"
-
-client = Anthropic(api_key=ANTHROPIC_API_KEY)
+# التوكن جاي من Environment Variable
+TOKEN = os.environ["8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"]
 
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
-    "واه": "متلعبهاش وهراني ياواحد القسنطيني",
+    "واه": "متلعبهاش وهراني يا واحد القسنطيني",
     "مهم": "صايي روح برب نبقاو نهدروا برك",
     "علاه": "وش دخلك",
     "وسيم": "my father",
     "برب": "شلقماتك برب؟",
     "لا": "لا",
-    "افا": "لااااااااااااااا",
+    "افا": "لاااااااااااا",
     "هيه": "برافو هك أك قسنطيني",
     "تم": "يب",
     "شكرا": "زعما مأدب",
     "كافي": "يحيى؟",
     "ماتش؟": "علاه روح صلي",
-    "عماد": "بيضة؟ لااااااااا خسارة عماد زعيم 🔥",
+    "عماد": "بيضة؟ لاااااااا خسارة عماد زعيم 🔥",
     "ياسمين": "مكانش مصطلح كافية للاسف معليش",
     "معز": "نيوزر"
 }
 
 house_images = {
-    "ارين": "arren.jpg",
+    "اررين": "arren.jpg",
     "ستارك": "stark.jpg",
     "باراثيون": "baratheon.jpg",
     "لانيستر": "lannister.jpg",
@@ -40,7 +34,7 @@ house_images = {
 }
 
 flags = {
-    "🇦🇪": "الإمارات", "🇶🇦": "قطر", "🇰🇼": "الكويت", "🇧🇭": "البحرين",
+ 8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E   "🇦🇪": "الإمارات", "🇶🇦": "قطر", "🇰🇼": "الكويت", "🇧🇭": "البحرين",
     "🇴🇲": "عُمان", "🇯🇴": "الأردن", "🇱🇧": "لبنان", "🇮🇶": "العراق",
     "🇸🇾": "سوريا", "🇯🇵": "اليابان", "🇨🇳": "الصين", "🇰🇷": "كوريا الجنوبية",
     "🇮🇳": "الهند", "🇮🇩": "إندونيسيا", "🇲🇾": "ماليزيا", "🇹🇭": "تايلاند",
@@ -149,7 +143,7 @@ general_qa = {
     "لغة البرازيل": "البرتغالية",
     "لغة المكسيك": "الاسبانية",
     "عملة اليابان": "الين",
-    "عملة امريكا": "الدولار",
+    "عملة امريكا": "الدولار"
 }
 
 
@@ -199,24 +193,6 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(f"خطأ ❌ الإجابة هي {answer}")
         del context.user_data["capital_answer"]
 
-    else:
-        # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ Claude
-        print("جاري الاتصال بـ Claude...")
-        try:
-            message = client.messages.create(
-                model="claude-sonnet-5",
-                max_tokens=500,
-                system="انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة.",
-                messages=[
-                    {"role": "user", "content": text}
-                ]
-            )
-            reply = message.content[0].text
-            await update.message.reply_text(reply)
-        except Exception as e:
-            print("CLAUDE ERROR:", repr(e))
-            await update.message.reply_text(f"خطأ: {e}")
-
 
 def main():
     app = Application.builder().token(TOKEN).build()
@@ -227,4 +203,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
