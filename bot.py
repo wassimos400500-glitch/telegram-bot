@@ -1,4 +1,3 @@
-
 import os
 import random
 from groq import Groq
@@ -18,7 +17,7 @@ def ask_groq(user_text: str) -> str:
     completion = groq_client.chat.completions.create(
         model="openai/gpt-oss-20b",
         messages=[
-            {"role": "system", "content": "انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة."},
+            {"role": "system", "content": "انت بوت تليجرام بترد بالعربية الفصحى مع القليل من الكلمات الإنجليزية بطريقة ودودة ومختصرة."},
             {"role": "user", "content": user_text}
         ]
     )
@@ -220,6 +219,8 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         except Exception as e:
             print("GROQ ERROR:", repr(e))
             await update.message.reply_text(f"خطأ: {e}")
+
+
 def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
