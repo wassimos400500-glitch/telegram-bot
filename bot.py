@@ -1,20 +1,34 @@
 import os
 import random
+import requests
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
-import google.generativeai as genai
 
 # التوكن الجديد بعد الإلغاء
 TOKEN = "8766911595:AAEv-XzQis_VqPndJWVxE1__5NmYf-nY5WM"
 
 # مفتاح Gemini API (مجاني)
-GEMINI_API_KEY = "AQ.Ab8RN6I5jZgHG4XYO7DYfi_NJ_F7puce_0ZF0Op6tNMfK_BWGA"
+GEMINI_API_KEY = "AQ.Ab8RN6KEhetFQ9zOvt3sZ19YAxlxf57Tgiuxu4xk6ZwSU2_YnQ"
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
 
-genai.configure(api_key=GEMINI_API_KEY)
-gemini_model = genai.GenerativeModel(
-    "gemini-2.0-flash",
-    system_instruction="انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة."
-)
+
+def ask_gemini(user_text: str) -> str:
+    headers = {
+        "Content-Type": "application/json",
+        "X-goog-api-key": GEMINI_API_KEY,
+    }
+    payload = {
+        "system_instruction": {
+            "parts": [{"text": "انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة."}]
+        },
+        "contents": [
+            {"parts": [{"text": user_text}]}
+        ]
+    }
+    r = requests.post(GEMINI_URL, headers=headers, json=payload, timeout=30)
+    r.raise_for_status()
+    data = r.json()
+    return data["candidates"][0]["content"]["parts"][0]["text"]
 
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
@@ -206,8 +220,7 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ Gemini
         try:
-            response = gemini_model.generate_content(text)
-            reply = response.text
+            reply = ask_gemini(text)
             await update.message.reply_text(reply)
         except Exception as e:
             print("GEMINI ERROR:", repr(e))
