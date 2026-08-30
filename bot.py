@@ -2,9 +2,15 @@ import os
 import random
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
+from anthropic import Anthropic
 
-# التوكن مكتوب مباشرة هنا
-TOKEN = "8766911595:AAH1u67LIcIFwbal5wznLXxxEso21Mbak0E"
+# التوكن الجديد بعد الإلغاء
+TOKEN = "8766911595:AAEv-XzQis_VqPndJWVxE1__5NmYf-nY5WM"
+
+# مفتاح Claude API
+ANTHROPIC_API_KEY = "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"
+
+client = Anthropic(api_key=ANTHROPIC_API_KEY)
 
 responses = {
     "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته",
@@ -192,6 +198,23 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             await update.message.reply_text(f"خطأ ❌ الإجابة هي {answer}")
         del context.user_data["capital_answer"]
+
+    else:
+        # لو الرسالة مش موجودة في أي حاجة فوق، ابعتها لـ Claude
+        try:
+            message = client.messages.create(
+                model="claude-sonnet-5",
+                max_tokens=500,
+                system="انت بوت تليجرام بترد باللهجة الجزائرية بطريقة ودودة ومختصرة.",
+                messages=[
+                    {"role": "user", "content": text}
+                ]
+            )
+            reply = message.content[0].text
+            await update.message.reply_text(reply)
+        except Exception as e:
+            print("CLAUDE ERROR:", repr(e))
+            await update.message.reply_text(f"خطأ: {e}")
 
 
 def main():
