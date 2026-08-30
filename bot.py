@@ -8,7 +8,7 @@ from openai import OpenAI
 TOKEN = "8766911595:AAEv-XzQis_VqPndJWVxE1__5NmYf-nY5WM"
 
 # مفتاح ChatGPT API
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -225,3 +225,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
